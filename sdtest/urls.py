@@ -18,6 +18,13 @@ from django.shortcuts import redirect
 from django.urls import path, include, re_path
 
 
+def root_redirect(request):
+    schema_view = 'schema-swagger-ui'
+    return redirect(schema_view, permanent=True)
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/', include('api.urls')),
+    re_path(r'^$', root_redirect),
 ]
