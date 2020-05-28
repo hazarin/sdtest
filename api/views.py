@@ -26,11 +26,6 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super(ParticipantViewSet, self).list(request, *args, **kwargs)
 
-    def create(self, request, *args, **kwargs):
-        return super(ParticipantViewSet, self).create(request, *args, **kwargs)
+    def update(self, request, pk=None):
+        pass
 
-    def update(self, request, *args, **kwargs):
-        return super(ParticipantViewSet, self).update(request, *args, **kwargs)
-
-    def retrieve(self, request, *args, **kwargs):
-        return super(ParticipantViewSet, self).update(request, *args, **kwargs)
