@@ -26,6 +26,3 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super(ParticipantViewSet, self).list(request, *args, **kwargs)
 
-    def update(self, request, pk=None):
-        pass
-
