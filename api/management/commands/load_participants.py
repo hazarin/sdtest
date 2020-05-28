@@ -31,6 +31,7 @@ class Command(BaseCommand):
                         precedent = models.Precedent(precedent=precedent_catalog, attitude=attitude,
                                                      importance=value['importance'], participant=participant)
                         precedent.save()
+                    if key > 500: break
             self.stdout.write(self.style.SUCCESS('Data loaded'))
         except DatabaseError:
             raise CommandError('Database error')
