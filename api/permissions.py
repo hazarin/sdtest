@@ -17,3 +17,5 @@ class IsAdminOrOwner(BasePermission):
                 return True
             else:
                 return obj.user == request.user
+
+        return True
