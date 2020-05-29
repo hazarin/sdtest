@@ -7,6 +7,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class PrecedentCatalog(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class ParticipantManager(models.Manager):
     def compatible(self, user):
@@ -54,6 +57,9 @@ class Participant(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     objects = ParticipantManager()
 
+    def __str__(self):
+        return self.name
+
 
 class Precedent(models.Model):
     ATTITUDE_CHOICES = [
@@ -64,3 +70,6 @@ class Precedent(models.Model):
     attitude = models.PositiveSmallIntegerField(choices=ATTITUDE_CHOICES, default=1)
     importance = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     participant = models.ForeignKey(Participant, related_name='precedents', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{}: {}'.format(self.participant, self.precedent.name)

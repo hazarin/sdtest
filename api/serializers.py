@@ -1,8 +1,32 @@
+from drf_yasg import openapi
 from rest_framework import serializers
 from . import models
 
 
 class PrecedentsListField(serializers.RelatedField):
+    class Meta:
+        swagger_schema_fields = {
+            "type": openapi.TYPE_OBJECT,
+            "properties": {
+                "name": openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "attitude": openapi.Schema(
+                            title="Attitude",
+                            type=openapi.TYPE_STRING,
+                            enum=['positive', 'negative']
+                        ),
+                        "importance": openapi.Schema(
+                            title="Importance",
+                            type=openapi.TYPE_INTEGER,
+                        ),
+                    },
+                    required=["attitude", "importance"]
+                ),
+            },
+            "required": ["name"],
+        }
+
     def to_internal_value(self, data):
         key = list(data.keys())[0]
         try:
@@ -68,7 +92,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
 
 
 class CompatibleSerializer(serializers.ModelSerializer):
-    weight = serializers.FloatField(read_only=True)
+    weight = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = models.Participant
