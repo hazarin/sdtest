@@ -37,8 +37,9 @@ class ParticipantSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'precedents')
 
     def create(self, validated_data):
+        user = self.context['request'].user
         precedents = validated_data.pop('precedents')
-        participant = models.Participant.objects.create(**validated_data)
+        participant = models.Participant.objects.create(user=user, **validated_data)
         for precedent in precedents:
             models.Precedent.objects.create(participant=participant, **precedent)
         return participant
@@ -64,3 +65,11 @@ class ParticipantSerializer(serializers.ModelSerializer):
         instance.name = validated_data.get('name', instance.name)
         instance.save()
         return instance
+
+
+class CompatibleSerializer(serializers.ModelSerializer):
+    weight = serializers.FloatField(read_only=True)
+
+    class Meta:
+        model = models.Participant
+        fields = ('id', 'name', 'weight')

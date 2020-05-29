@@ -20,6 +20,7 @@ router.register(r'participant', views.ParticipantViewSet)
 urlpatterns = [
     re_path(r'^rest-auth/', include('rest_auth.urls')),
     re_path(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+    re_path(r'^participant/info/', views.ParticipantView.as_view()),
     re_path(r'^', include(router.urls)),
     re_path(r'^', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
