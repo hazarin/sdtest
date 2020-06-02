@@ -5,6 +5,9 @@ import jsonlines
 
 
 class Command(BaseCommand):
+    """
+    Загрузка списка участников из participants.jsonl
+    """
     help = 'Load participants'
 
     def add_arguments(self, parser):

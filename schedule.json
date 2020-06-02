@@ -1,0 +1,50 @@
+[
+  {
+    "model": "django_q.schedule",
+    "pk": 1,
+    "fields": {
+      "name": "mailing",
+      "func": "api.utils.mail_delivery",
+      "hook": null,
+      "args": "",
+      "kwargs": "",
+      "schedule_type": "I",
+      "minutes": 1,
+      "repeats": -9,
+      "next_run": "2020-06-02T10:26:51Z",
+      "task": "270343ae181d47d7ad0d05e56b1da8ca"
+    }
+  },
+  {
+    "model": "django_q.schedule",
+    "pk": 2,
+    "fields": {
+      "name": "send_mail",
+      "func": "django.core.management.call_command",
+      "hook": null,
+      "args": "'send_mail'",
+      "kwargs": "",
+      "schedule_type": "I",
+      "minutes": 1,
+      "repeats": -1,
+      "next_run": "2020-06-02T10:55:52Z",
+      "task": null
+    }
+  },
+  {
+    "model": "django_q.schedule",
+    "pk": 3,
+    "fields": {
+      "name": "retry_deferred",
+      "func": "django.core.management.call_command",
+      "hook": null,
+      "args": "'retry_deferred'",
+      "kwargs": "",
+      "schedule_type": "I",
+      "minutes": 20,
+      "repeats": -1,
+      "next_run": "2020-06-02T10:59:04Z",
+      "task": null
+    }
+  }
+]

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'drf_yasg',
     'mailer',
+    'django_q',
 
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
@@ -185,3 +186,16 @@ CACHES = {
 MAILER_EMAIL_MAX_BATCH = 10  # integer or None
 MAILER_EMAIL_MAX_DEFERRED = 10  # integer or None
 MAILER_EMAIL_THROTTLE = 0  # passed to time.sleep()
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND
+
+# Django-Q ORM broker connection settings
+
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 1,
+    'timeout': 90,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}

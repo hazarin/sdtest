@@ -54,6 +54,7 @@ class ParticipantManager(models.Manager):
 
 class Participant(models.Model):
     name = models.CharField(max_length=255)
+    # Null=true т.к. в фикстурах недостаточно данных для создания связанных пользователей
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     objects = ParticipantManager()
 

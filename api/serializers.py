@@ -4,6 +4,10 @@ from . import models
 
 
 class PrecedentsListField(serializers.RelatedField):
+    """
+    Используется для представления прецедентов (предпочтений)
+    в формате близком к используемому в participants.jsonl
+    """
     class Meta:
         swagger_schema_fields = {
             "type": openapi.TYPE_OBJECT,

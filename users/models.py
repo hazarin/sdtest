@@ -1,11 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager as DjangoBaseUserManager
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
+from api.models import Participant
 
-# Create your models here.
+
 class BaseUserManager(DjangoBaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         """
@@ -48,3 +51,16 @@ class AppUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+@receiver(post_save, sender=AppUser)
+def post_save(sender, instance, created, **kwargs):
+    if created:
+        Participant.objects.create(
+            name='{} {}'.format(instance.first_name, instance.last_name).strip(),
+            user=instance
+        )
+    else:
+        if not instance.participant.name.strip():
+            instance.participant.name = '{} {}'.format(instance.first_name, instance.last_name).strip()
+            instance.participant.save()

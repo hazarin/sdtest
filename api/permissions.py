@@ -5,7 +5,7 @@ from api.models import Participant
 
 class IsAdminOrOwner(BasePermission):
     """
-    Allows write access only to superusers and owners to Participant objects.
+    Allows write access only to superusers and owners for Participant objects.
     """
 
     def has_permission(self, request, view):
