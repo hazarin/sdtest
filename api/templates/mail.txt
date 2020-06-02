@@ -1,0 +1,8 @@
+{% load i18n %}
+{% trans "Recommended precedents" %}
+
+{% for value in precedents_list %}
+    {{ forloop.counter }}: {{ value.precedent__name|capfirst }}. {% trans "Populated by" %} {{ value.count }} {% trans "users" %}.
+{% endfor %}
+
+{% trans "Best regards from API" %}

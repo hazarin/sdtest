@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager as DjangoBaseUserManager
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 
 # Create your models here.
@@ -38,6 +39,7 @@ class BaseUserManager(DjangoBaseUserManager):
 class AppUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
+    delivery_at = models.DateTimeField(default=(timezone.now() - timezone.timedelta(days=10)))
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

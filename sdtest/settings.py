@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
     'drf_yasg',
+    'mailer',
 
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
@@ -165,3 +166,22 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
+
+# Django cache settings
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+        'TIMEOUT': 60,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
+
+# Django mailer settings
+
+MAILER_EMAIL_MAX_BATCH = 10  # integer or None
+MAILER_EMAIL_MAX_DEFERRED = 10  # integer or None
+MAILER_EMAIL_THROTTLE = 0  # passed to time.sleep()
