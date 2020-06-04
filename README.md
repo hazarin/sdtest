@@ -19,7 +19,7 @@ source ./venv/bin/activate
 
 Выполнить миграции и загрузку фикстур  
 `python manage.py migrate`  
-`python manage.py loaddata.shedule.json` - расписание рассылки для Django-q  
+`python manage.py loaddata shedule.json` - расписание рассылки для Django-q
 `python manage.py load_participants participants.jsonl` - предпочтения и участники  
 
 Запустить сервер разработки и кластер очередей django-q  
