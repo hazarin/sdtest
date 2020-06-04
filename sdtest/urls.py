@@ -26,5 +26,10 @@ def root_redirect(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('api.urls')),
+
+    # Для использования базовых шаблонов при генерации email'ов конфирмации
+    path('accounts/', include('allauth.urls')),
+    re_path(r'^', include('django.contrib.auth.urls')),
+
     re_path(r'^$', root_redirect),
 ]

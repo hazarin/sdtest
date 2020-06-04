@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='appuser',
             name='delivery_at',
-            field=models.DateTimeField(default=datetime.datetime(2020, 5, 20, 9, 33, 18, 938243, tzinfo=utc)),
+            field=models.DateTimeField(default=datetime.datetime(2020, 5, 20, tzinfo=utc)),
         ),
     ]

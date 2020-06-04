@@ -1,6 +1,15 @@
 from drf_yasg import openapi
 from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
+
 from . import models
+
+
+def precedent_validator(value):
+    if value['attitude'] not in [0, 1]:
+        raise serializers.ValidationError(_('Wrong attitude value'))
+    if value['importance'] < 1 or value['importance'] > 10:
+        raise serializers.ValidationError(_('Wrong importance value'))
 
 
 class PrecedentsListField(serializers.RelatedField):
@@ -42,11 +51,13 @@ class PrecedentsListField(serializers.RelatedField):
             if data[key]['attitude'] == k:
                 attitude = v
                 break
-        return {
+        value = {
             'precedent': precedent_cat,
             'attitude': attitude,
             'importance': data[key]['importance'],
         }
+        self.run_validators(value)
+        return value
 
     def to_representation(self, value):
         return {
@@ -58,7 +69,8 @@ class PrecedentsListField(serializers.RelatedField):
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
-    precedents = PrecedentsListField(queryset=models.Precedent.objects.all(), many=True, read_only=False)
+    precedents = PrecedentsListField(queryset=models.Precedent.objects.all(),
+                                     many=True, read_only=False, validators=[precedent_validator])
 
     class Meta:
         model = models.Participant

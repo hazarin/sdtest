@@ -27,7 +27,7 @@ def mail_delivery():
     # Список пользователей с предпочтениями по которым не было рассылки больше дня
     participants = \
         Participant.objects \
-            .filter(user__isnull=False, user__delivery_at__lte=yesterday) \
+            .filter(user__isnull=False, user__delivery_at__lte=yesterday, user__emailaddress__verified=True) \
             .select_related('user') \
             .prefetch_related(Prefetch(
                 'precedents',

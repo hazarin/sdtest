@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager as DjangoBaseUserManager
@@ -42,7 +43,7 @@ class BaseUserManager(DjangoBaseUserManager):
 class AppUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
-    delivery_at = models.DateTimeField(default=(timezone.now() - timezone.timedelta(days=10)))
+    delivery_at = models.DateTimeField(default=datetime.datetime(2020, 5, 20, tzinfo=timezone.utc))
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

@@ -1,7 +1,9 @@
-from django.conf import settings
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_auth.serializers import LoginSerializer, UserDetailsSerializer
+from rest_auth.serializers import LoginSerializer, UserDetailsSerializer, PasswordResetSerializer
 from rest_auth.registration.serializers import RegisterSerializer
+from rest_framework.exceptions import NotFound
+from django.utils.translation import gettext_lazy as _
 from . import models
 
 
@@ -19,3 +21,11 @@ class AppUserDetailsSerializer(UserDetailsSerializer):
 
 class AppRegisterSerializer(RegisterSerializer):
     username = None
+
+
+class AppPasswordResetSerializer(PasswordResetSerializer):
+    def validate_email(self, value):
+        if not get_user_model().objects.filter(email=value).exists():
+            raise NotFound(_('Email not found'))
+
+        return super().validate_email(value)

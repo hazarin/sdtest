@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.generics import RetrieveAPIView, get_object_or_404
 from rest_framework import permissions
 from rest_framework.decorators import action

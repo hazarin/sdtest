@@ -72,5 +72,8 @@ class Precedent(models.Model):
     importance = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     participant = models.ForeignKey(Participant, related_name='precedents', on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ['precedent', 'participant']
+
     def __str__(self):
         return '{}: {}'.format(self.participant, self.precedent.name)
