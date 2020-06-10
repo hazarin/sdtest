@@ -19,6 +19,7 @@ class Command(BaseCommand):
             with transaction.atomic():
                 key = 0
                 for obj in reader:
+                    if key > 100: break
                     key += 1
                     participant = models.Participant.objects.create(name=obj['name'])
                     if key % 100 == 0:
