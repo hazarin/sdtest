@@ -9,4 +9,5 @@ RUN chmod +x /code/start.sh
 RUN python manage.py migrate
 RUN python manage.py loaddata schedule.json
 RUN python manage.py load_participants participants.jsonl
+EXPOSE 8000:80
 CMD ["sh", "start.sh"]
