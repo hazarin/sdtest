@@ -1,0 +1,1 @@
+web: gunicorn sdtest.wsgi --log-file -
