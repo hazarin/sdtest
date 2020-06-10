@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# turn on bash's job control
-set -m
-
 # Start cluster
 python manage.py qcluster &
 
