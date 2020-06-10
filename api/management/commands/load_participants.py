@@ -22,7 +22,7 @@ class Command(BaseCommand):
                     key += 1
                     participant = models.Participant.objects.create(name=obj['name'])
                     if key % 100 == 0:
-                        self.stdout.write(self.style.SUCCESS(key))
+                        self.stdout.write(self.style.SUCCESS(str(key)))
                     for name, value in obj['precedents'].items():
                         try:
                             precedent_catalog = models.PrecedentCatalog.objects.get(name=name)
