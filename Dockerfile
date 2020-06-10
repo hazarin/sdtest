@@ -5,6 +5,7 @@ WORKDIR /code
 COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 COPY . /code/
+RUN chmod +x /code/start.sh
 RUN python manage.py migrate
 RUN python manage.py loaddata schedule.json
 RUN python manage.py load_participants participants.jsonl
