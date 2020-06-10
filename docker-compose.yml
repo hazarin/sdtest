@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     build: .
-    command: /bin/bash -c "start.sh"
+#    command: /bin/bash -c "start.sh"
 #    volumes:
 #      - .:/code
     ports:
