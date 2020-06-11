@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
+from django.db.models import FilteredRelation, Q, Subquery
+from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
@@ -12,7 +14,7 @@ class PrecedentCatalog(models.Model):
 
 
 class ParticipantManager(models.Manager):
-    def compatible(self, user):
+    def compatible_raw(self, user):
         query = '''
             select int.id,
                 int.name,
@@ -23,13 +25,11 @@ class ParticipantManager(models.Manager):
                 select p.id   as id,
                     p.name as  name,
                     a.name,
-                    ap.attitude,
                     ap.importance,
                     sq.id,
-                    sq.attitude,
                     sq.importance,
                     case
-                        when ap.importance > sq.importance
+                        when abs(ap.importance) > abs(sq.importance)
                         then cast(sq.importance as float) / cast(ap.importance as float)
                         else cast(ap.importance as float) / cast(sq.importance as float) 
                     end compatibility
@@ -37,16 +37,16 @@ class ParticipantManager(models.Manager):
                 join {1} ap on p.id = ap.participant_id
                 join {2} a on ap.precedent_id = a.id
                 join (
-                    select sp.id, sap.precedent_id, sap.attitude, sap.importance
+                    select sp.id, sap.precedent_id, sap.importance
                     from {0} sp
                     join {1} sap on sp.id = sap.participant_id
                     where sp.user_id = {3}
                     ) sq on ap.precedent_id = sq.precedent_id
-                where (ap.attitude == sq.attitude) and (p.user_id <> {3} or p.user_id is null)
+                where (p.user_id <> {3} or p.user_id is null)
                 order by p.id
                 ) int
             group by int.id
-            order by cnt desc, weight desc
+            order by weight desc
             limit 20''' \
             .format('api_participant', 'api_precedent', 'api_precedentcatalog', user.id)
         return self.raw(query)
@@ -62,14 +62,14 @@ class Participant(models.Model):
         return self.name
 
 
+def importance_validator(value):
+    if not abs(value) in list(range(1,11)):
+        raise ValidationError(_('Importance value %(value)s not in allowed range'), params={'value': value})
+
+
 class Precedent(models.Model):
-    ATTITUDE_CHOICES = [
-        (0, 'negative'),
-        (1, 'positive')
-    ]
     precedent = models.ForeignKey(PrecedentCatalog, on_delete=models.CASCADE)
-    attitude = models.PositiveSmallIntegerField(choices=ATTITUDE_CHOICES, default=1)
-    importance = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    importance = models.SmallIntegerField(validators=[importance_validator])
     participant = models.ForeignKey(Participant, related_name='precedents', on_delete=models.CASCADE)
 
     class Meta:

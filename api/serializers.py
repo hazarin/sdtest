@@ -6,9 +6,9 @@ from . import models
 
 
 def precedent_validator(value):
-    if value['attitude'] not in [0, 1]:
+    if value['attitude'] not in ['positive', 'negative']:
         raise serializers.ValidationError(_('Wrong attitude value'))
-    if value['importance'] < 1 or value['importance'] > 10:
+    if not value['importance'] in list(range(1,11)):
         raise serializers.ValidationError(_('Wrong importance value'))
 
 
@@ -46,24 +46,21 @@ class PrecedentsListField(serializers.RelatedField):
             precedent_cat = models.PrecedentCatalog.objects.get(name=key)
         except models.PrecedentCatalog.DoesNotExist as e:
             precedent_cat = models.PrecedentCatalog.objects.create(name=key)
-        attitude = None
-        for v, k in models.Precedent.ATTITUDE_CHOICES:
-            if data[key]['attitude'] == k:
-                attitude = v
-                break
         value = {
             'precedent': precedent_cat,
-            'attitude': attitude,
+            'attitude': data[key]['attitude'],
             'importance': data[key]['importance'],
         }
         self.run_validators(value)
+        value['importance'] = value['importance'] if value['attitude'] == 'positive' else -value['importance']
+        del value['attitude']
         return value
 
     def to_representation(self, value):
         return {
             value.precedent.name: {
-                'attitude': value.get_attitude_display(),
-                'importance': value.importance
+                'attitude': 'positive' if value.importance > 0 else 'negative',
+                'importance': abs(value.importance)
             }
         }
 
@@ -97,7 +94,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
             else:
                 models.Precedent.objects.create(participant=instance, **precedent)
 
-        # удаляем элементы отсутствующте в PUT request
+        # удаляем элементы отсутствующие в PUT request
         if not self.partial and len(precedents_items_dict) > 0:
             for item in precedents_items_dict.values():
                 item.delete()

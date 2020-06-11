@@ -47,7 +47,7 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     def compatible(self, request):
         user = request.user
         # check weight...
-        compatible_users = list(filter(lambda item: item.weight >= 75, Participant.objects.compatible(user)))
+        compatible_users = list(filter(lambda item: item.weight >= 75, Participant.objects.compatible_raw(user)))
 
         serializer = self.get_serializer(compatible_users, many=True)
         return Response(serializer.data)
