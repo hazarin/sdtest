@@ -17,21 +17,18 @@ class Command(BaseCommand):
         reader = jsonlines.open(options['file'])
         try:
             with transaction.atomic():
-                key = 0
-                for obj in reader:
-                    if key > 100: break
-                    key += 1
+                for key, obj in enumerate(reader):
                     participant = models.Participant.objects.create(name=obj['name'])
                     if key % 100 == 0:
                         self.stdout.write(self.style.SUCCESS(str(key)))
                     for name, value in obj['precedents'].items():
-                        try:
-                            precedent_catalog = models.PrecedentCatalog.objects.get(name=name)
-                        except models.PrecedentCatalog.DoesNotExist as e:
-                            precedent_catalog = models.PrecedentCatalog.objects.create(name=name)
-                        attitude = 0 if value['attitude'] == 'negative' else 1
-                        precedent = models.Precedent.objects.create(precedent=precedent_catalog, attitude=attitude,
-                                                     importance=value['importance'], participant=participant)
+                        precedent_catalog = models.PrecedentCatalog.objects.get_or_create(name=name)
+                        importance = -value['importance'] if value['attitude'] == 'negative' else value['importance']
+                        models.Precedent.objects.create(
+                            precedent=precedent_catalog[0],
+                            importance=importance,
+                            participant=participant
+                        )
             self.stdout.write(self.style.SUCCESS('Data loaded'))
         except DatabaseError:
             raise CommandError('Database error')
